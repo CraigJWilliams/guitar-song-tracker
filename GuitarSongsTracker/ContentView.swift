@@ -4,10 +4,14 @@
 //
 //  Created by Craig Williams on 27/08/2025.
 //
-
+import SwiftData
 import SwiftUI
 
 struct ContentView: View {
+    
+    @Query var songs: [Song]
+    @Environment(\.modelContext) var modelContext
+    
     var body: some View {
         VStack {
             Image(systemName: "globe")
@@ -21,4 +25,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .modelContainer(for: Song.self, inMemory: true) 
 }
