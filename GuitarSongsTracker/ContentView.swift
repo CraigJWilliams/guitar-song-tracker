@@ -12,14 +12,31 @@ struct ContentView: View {
     @Query(sort: \Song.addedDate, order: .reverse) var songs: [Song]
     @Environment(\.modelContext) var modelContext
     
+    @State private var selectedStatus = "All"
+    @State private var statuses = ["All", "Not Started", "Learning", "Mastered"]
+    
+    var filteredSongs: [Song] {
+           if selectedStatus == "All" {
+               return songs
+           } else {
+               return songs.filter { $0.status == selectedStatus }
+           }
+       }
+    
     var body: some View {
         NavigationStack {
+                Picker("Filter" , selection: $selectedStatus) {
+                    ForEach(statuses, id: \.self) { status in
+                        Text(status).tag(status)
+                    }
+                }.pickerStyle(.segmented)
+            
             List {
-                ForEach(songs) { song in
+                ForEach(filteredSongs) { song in
                     SongListItem(song: song)
                 }
             }            .navigationTitle("Song Tracker")
-                .navigationSubtitle("\(songs.count) \(songs.count == 1 ? "song" : "songs") tracked")
+                .navigationSubtitle("\(filteredSongs.count) \(filteredSongs.count == 1 ? "Song" : "Songs")")
                 .toolbar {
                     ToolbarItem {
                         Button {
