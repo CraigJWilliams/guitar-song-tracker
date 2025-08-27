@@ -9,35 +9,26 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @Query var songs: [Song]
+    @Query(sort: \Song.addedDate, order: .reverse) var songs: [Song]
     @Environment(\.modelContext) var modelContext
     
     var body: some View {
         NavigationStack {
             List {
                 ForEach(songs) { song in
-                    // TODO: Refactor list items into separate SongRowView struct
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(song.title)
-                            .font(.title2)
-                        Text(song.artist)
-                            .font(.title3)
-                        Text(song.status)
-                            .font(.body)
-                        Text(song.addedDate.formatted(date: .abbreviated, time: .omitted))
-                    }.padding(.vertical, 4)
+                    SongListItem(song: song)
                 }
-            }
-            .navigationTitle("Song Tracker")
-            .toolbar {
-                ToolbarItem {
-                    Button {
-                        addDummyData()
-                    } label: {
-                        Label("Add Song", systemImage: "plus")
+            }            .navigationTitle("Song Tracker")
+                .navigationSubtitle("\(songs.count) \(songs.count == 1 ? "song" : "songs") tracked")
+                .toolbar {
+                    ToolbarItem {
+                        Button {
+                            addDummyData()
+                        } label: {
+                            Label("Add Song", systemImage: "plus")
+                        }
                     }
                 }
-            }
         }
     }
     
@@ -51,7 +42,7 @@ struct ContentView: View {
                  status: "Not Started"),
             Song(title: "Sweet Child O' Mine",
                  artist: "Guns N' Roses",
-                 status: "Can Play"),
+                 status: "Mastered"),
             Song(title: "Black",
                  artist: "Pearl Jam",
                  status: "Mastered"),
@@ -63,7 +54,7 @@ struct ContentView: View {
                  status: "Learning"),
             Song(title: "Wish You Were Here",
                  artist: "Pink Floyd",
-                 status: "Can Play"),
+                 status: "Mastered"),
             Song(title: "Under the Bridge",
                  artist: "Red Hot Chili Peppers",
                  status: "Learning")
@@ -71,6 +62,40 @@ struct ContentView: View {
         
         for song in dummySongs {
             modelContext.insert(song)
+        }
+    }
+}
+
+struct SongListItem: View {
+    let song: Song
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(song.artist)
+                .font(.caption)
+            Text(song.title)
+                .font(.title2)
+                .bold()
+                .padding(.bottom, 4)
+            Text(song.status)
+                .font(.footnote)
+                .bold()
+                .foregroundColor(.secondary)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(statusColor(for: song.status))
+                .cornerRadius(16)
+        }
+        .padding(.vertical, 2)
+        .lineLimit(1)
+        .truncationMode(.tail)
+    }
+    private func statusColor(for status: String) -> Color {
+        switch status {
+        case "Not Started": return .red.opacity(0.2)
+        case "Learning": return .orange.opacity(0.2)
+        case "Mastered": return .green.opacity(0.2)
+        default: return .gray.opacity(0.2)
         }
     }
 }
