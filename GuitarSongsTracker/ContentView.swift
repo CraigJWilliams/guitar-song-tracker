@@ -17,6 +17,7 @@ struct ContentView: View {
     @State private var showingAlert = false
     @State private var songsToDelete: [Song] = []
     @State private var showSheet = false
+    @State private var selectedSong: Song?
     
     var filteredSongs: [Song] {
         if selectedStatus == "All" {
@@ -37,6 +38,9 @@ struct ContentView: View {
             List {
                 ForEach(filteredSongs) { song in
                     SongListItem(song: song)
+                        .onTapGesture {
+                            selectedSong = song
+                        }
                 }
                 .onDelete(perform: confirmDelete)
             }
@@ -46,11 +50,15 @@ struct ContentView: View {
                 ToolbarItem {
                     Button {
                         showSheet = true
+                        selectedSong = nil
                     } label: {
                         Label("Add Song", systemImage: "plus")
                     }
                 }
             }
+        }
+        .sheet(item: $selectedSong) { song in
+            AddSongView(song: song, selectedSong: $selectedSong)
         }
         .sheet(isPresented: $showSheet) {
             AddSongView()
@@ -77,8 +85,6 @@ struct ContentView: View {
         showingAlert = true
     }
 }
-
-
 
 #Preview {
     ContentView()
