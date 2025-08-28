@@ -14,48 +14,63 @@ struct ContentView: View {
     
     @State private var selectedStatus = "All"
     @State private var statuses = ["All", "Not Started", "Learning", "Mastered"]
+    @State private var showingAlert = false
+    @State private var songsToDelete: [Song] = []
     
     var filteredSongs: [Song] {
-           if selectedStatus == "All" {
-               return songs
-           } else {
-               return songs.filter { $0.status == selectedStatus }
-           }
-       }
+        if selectedStatus == "All" {
+            return songs
+        } else {
+            return songs.filter { $0.status == selectedStatus }
+        }
+    }
     
     var body: some View {
         NavigationStack {
-                Picker("Filter" , selection: $selectedStatus) {
-                    ForEach(statuses, id: \.self) { status in
-                        Text(status).tag(status)
-                    }
-                }.pickerStyle(.segmented)
+            Picker("Filter" , selection: $selectedStatus) {
+                ForEach(statuses, id: \.self) { status in
+                    Text(status).tag(status)
+                }
+            }.pickerStyle(.segmented)
             
             List {
                 ForEach(filteredSongs) { song in
                     SongListItem(song: song)
                 }
-                .onDelete(perform: removeSong)
-            }            .navigationTitle("Song Tracker")
-                .navigationSubtitle("\(filteredSongs.count) \(filteredSongs.count == 1 ? "Song" : "Songs")")
-                .toolbar {
-                    ToolbarItem {
-                        Button {
-                            addDummyData()
-                        } label: {
-                            Label("Add Song", systemImage: "plus")
-                        }
+                .onDelete(perform: confirmDelete)
+            }
+            .navigationTitle("Song Tracker")
+            .navigationSubtitle("\(filteredSongs.count) \(filteredSongs.count == 1 ? "Song" : "Songs")")
+            .toolbar {
+                ToolbarItem {
+                    Button {
+                        addDummyData()
+                    } label: {
+                        Label("Add Song", systemImage: "plus")
                     }
                 }
+            }
         }
-        
+        .alert(songsToDelete.count == 1 ? "Delete song?" : "Delete \(songsToDelete.count) songs?", isPresented: $showingAlert) {
+            Button("Delete", role: .destructive) {
+                for song in songsToDelete {
+                    modelContext.delete(song)
+                }
+                songsToDelete = []
+            }
+            Button("Cancel", role: .cancel) {
+                songsToDelete = []
+            }
+        } message: {
+            Text("This action cannot be undone.")
+        }
     }
     
-    func removeSong(at offsets: IndexSet) {
-        for index in offsets {
-            let songToRemove = filteredSongs[index]
-            modelContext.delete(songToRemove)
-        }
+    //MARK: - FUNCTIONS
+    
+    func confirmDelete(at offsets: IndexSet) {
+        songsToDelete = offsets.map { filteredSongs[$0] }
+        showingAlert = true
     }
     
     private func addDummyData() {
@@ -90,7 +105,6 @@ struct ContentView: View {
             modelContext.insert(song)
         }
     }
-
 }
 
 struct SongListItem: View {
@@ -117,6 +131,7 @@ struct SongListItem: View {
         .lineLimit(1)
         .truncationMode(.tail)
     }
+    
     private func statusColor(for status: String) -> Color {
         switch status {
         case "Not Started": return .red.opacity(0.2)
