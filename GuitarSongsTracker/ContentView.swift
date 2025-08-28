@@ -35,6 +35,7 @@ struct ContentView: View {
                 ForEach(filteredSongs) { song in
                     SongListItem(song: song)
                 }
+                .onDelete(perform: removeSong)
             }            .navigationTitle("Song Tracker")
                 .navigationSubtitle("\(filteredSongs.count) \(filteredSongs.count == 1 ? "Song" : "Songs")")
                 .toolbar {
@@ -46,6 +47,14 @@ struct ContentView: View {
                         }
                     }
                 }
+        }
+        
+    }
+    
+    func removeSong(at offsets: IndexSet) {
+        for index in offsets {
+            let songToRemove = filteredSongs[index]
+            modelContext.delete(songToRemove)
         }
     }
     
@@ -81,6 +90,7 @@ struct ContentView: View {
             modelContext.insert(song)
         }
     }
+
 }
 
 struct SongListItem: View {
