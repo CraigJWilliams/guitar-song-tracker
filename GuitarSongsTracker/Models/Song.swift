@@ -8,6 +8,10 @@
 import Foundation
 import SwiftData
 
+struct SongStatus {
+    static let all = ["Not Started", "Learning", "Mastered"]
+}
+
 @Model
 class Song {
     var title: String

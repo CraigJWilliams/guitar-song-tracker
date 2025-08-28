@@ -13,9 +13,10 @@ struct ContentView: View {
     @Environment(\.modelContext) var modelContext
     
     @State private var selectedStatus = "All"
-    @State private var statuses = ["All", "Not Started", "Learning", "Mastered"]
+    @State private var statuses = ["All"] + SongStatus.all
     @State private var showingAlert = false
     @State private var songsToDelete: [Song] = []
+    @State private var showSheet = false
     
     var filteredSongs: [Song] {
         if selectedStatus == "All" {
@@ -44,12 +45,15 @@ struct ContentView: View {
             .toolbar {
                 ToolbarItem {
                     Button {
-                        addDummyData()
+                        showSheet = true
                     } label: {
                         Label("Add Song", systemImage: "plus")
                     }
                 }
             }
+        }
+        .sheet(isPresented: $showSheet) {
+            AddSongView()
         }
         .alert(songsToDelete.count == 1 ? "Delete song?" : "Delete \(songsToDelete.count) songs?", isPresented: $showingAlert) {
             Button("Delete", role: .destructive) {
@@ -72,75 +76,9 @@ struct ContentView: View {
         songsToDelete = offsets.map { filteredSongs[$0] }
         showingAlert = true
     }
-    
-    private func addDummyData() {
-        let dummySongs = [
-            Song(title: "Wonderwall",
-                 artist: "Oasis",
-                 status: "Learning"),
-            Song(title: "Hotel California",
-                 artist: "Eagles",
-                 status: "Not Started"),
-            Song(title: "Sweet Child O' Mine",
-                 artist: "Guns N' Roses",
-                 status: "Mastered"),
-            Song(title: "Black",
-                 artist: "Pearl Jam",
-                 status: "Mastered"),
-            Song(title: "Stairway to Heaven",
-                 artist: "Led Zeppelin",
-                 status: "Not Started"),
-            Song(title: "Creep",
-                 artist: "Radiohead",
-                 status: "Learning"),
-            Song(title: "Wish You Were Here",
-                 artist: "Pink Floyd",
-                 status: "Mastered"),
-            Song(title: "Under the Bridge",
-                 artist: "Red Hot Chili Peppers",
-                 status: "Learning")
-        ]
-        
-        for song in dummySongs {
-            modelContext.insert(song)
-        }
-    }
 }
 
-struct SongListItem: View {
-    let song: Song
-    
-    var body: some View {
-        VStack(alignment: .leading) {
-            Text(song.artist)
-                .font(.caption)
-            Text(song.title)
-                .font(.title2)
-                .bold()
-                .padding(.bottom, 4)
-            Text(song.status)
-                .font(.footnote)
-                .bold()
-                .foregroundColor(.secondary)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(statusColor(for: song.status))
-                .cornerRadius(16)
-        }
-        .padding(.vertical, 2)
-        .lineLimit(1)
-        .truncationMode(.tail)
-    }
-    
-    private func statusColor(for status: String) -> Color {
-        switch status {
-        case "Not Started": return .red.opacity(0.2)
-        case "Learning": return .orange.opacity(0.2)
-        case "Mastered": return .green.opacity(0.2)
-        default: return .gray.opacity(0.2)
-        }
-    }
-}
+
 
 #Preview {
     ContentView()
