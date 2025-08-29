@@ -1,0 +1,84 @@
+{
+  "fill" : {
+    "automatic-gradient" : "extended-srgb:0.38039,0.33333,0.96078,1.00000"
+  },
+  "groups" : [
+    {
+      "blur-material" : null,
+      "layers" : [
+        {
+          "fill-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "extended-srgb:0.38039,0.33333,0.96078,1.00000"
+              }
+            },
+            {
+              "appearance" : "tinted",
+              "value" : {
+                "solid" : "extended-gray:1.00000,1.00000"
+              }
+            }
+          ],
+          "hidden" : false,
+          "image-name" : "musical-note.png",
+          "name" : "musical-note",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              88.1328125,
+              127.0234375
+            ]
+          }
+        },
+        {
+          "fill-specializations" : [
+            {
+              "value" : {
+                "solid" : "extended-gray:1.00000,1.00000"
+              }
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "extended-gray:1.00000,1.00000"
+              }
+            },
+            {
+              "appearance" : "tinted",
+              "value" : {
+                "solid" : "extended-gray:0.50000,1.00000"
+              }
+            }
+          ],
+          "glass" : true,
+          "image-name" : "list.png",
+          "name" : "list",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              -135.9765625,
+              -44.8515625
+            ]
+          }
+        }
+      ],
+      "lighting" : "individual",
+      "shadow" : {
+        "kind" : "layer-color",
+        "opacity" : 0.3
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}
