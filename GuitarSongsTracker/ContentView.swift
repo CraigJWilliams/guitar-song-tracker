@@ -47,13 +47,13 @@ struct ContentView: View {
             .navigationTitle("Song Tracker")
             .navigationSubtitle("\(filteredSongs.count) \(filteredSongs.count == 1 ? "Song" : "Songs")")
             .toolbar {
-                ToolbarItem {
-                    Button {
-                        showSheet = true
-                        selectedSong = nil
-                    } label: {
-                        Label("Add Song", systemImage: "plus")
-                    }
+                ToolbarItem (placement: .topBarTrailing) {
+                        Button {
+                            showSheet = true
+                            selectedSong = nil
+                        } label: {
+                            Label("Add Song", systemImage: "plus")
+                        }
                 }
             }
         }

@@ -62,13 +62,13 @@ struct AddSongView: View {
             .navigationTitle(songToEdit == nil ? "Add Song" : "Edit Song")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .topBarLeading) {
                     Button("Cancel") {
                         selectedSong = nil
                         dismiss()
                     }
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .topBarTrailing) {
                     Button("Save") {
                         if let songToEdit = songToEdit {
                             songToEdit.title = songTitle
