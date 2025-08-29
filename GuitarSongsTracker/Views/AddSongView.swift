@@ -80,7 +80,8 @@ struct AddSongView: View {
                             modelContext.insert(newSong)
                         }
                         dismiss()
-                    }
+                    }.buttonStyle(.glassProminent)
+                        .tint(.indigo)
                     .disabled(!canSave)
                 }
             }
