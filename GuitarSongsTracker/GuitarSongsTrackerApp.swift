@@ -15,6 +15,7 @@ struct GuitarSongsTrackerApp: App {
         WindowGroup {
             ContentView()
                 .preferredColorScheme(colorSchemeFrom(theme))
+                .modelContainer(for: Song.self)
         }
     }
 
