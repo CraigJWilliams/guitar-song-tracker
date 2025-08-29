@@ -48,12 +48,23 @@ struct ContentView: View {
             .navigationSubtitle("\(filteredSongs.count) \(filteredSongs.count == 1 ? "Song" : "Songs")")
             .toolbar {
                 ToolbarItem (placement: .topBarTrailing) {
-                        Button {
-                            showSheet = true
-                            selectedSong = nil
-                        } label: {
-                            Label("Add Song", systemImage: "plus")
-                        }
+                    NavigationLink(destination: SettingsView()) {
+                        Label("Settings", systemImage: "gear")
+                            .font(.title2)
+                            .labelStyle(.iconOnly)
+                    }
+                }
+                ToolbarItem(placement: .bottomBar) {
+                    Spacer()
+                }
+                ToolbarItem (placement: .bottomBar) {
+                    Button {
+                        showSheet = true
+                        selectedSong = nil
+                    } label: {
+                        Label("Add Song", systemImage: "plus")
+                    }.buttonStyle(.glassProminent)
+                        .tint(.indigo)
                 }
             }
         }
